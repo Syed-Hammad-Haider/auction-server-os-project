@@ -1,12 +1,12 @@
 #include "semaphore.h"
 #include <stdio.h>
 #include <stdlib.h>
-// Global semaphore definition
+// Global defined semaphore
 sem_t active_bids_semaphore;
 
 void initialize_semaphore(void) {
     // Initialize semaphore with MAX_CONCURRENT_BIDS available slots
-    // Second parameter 0 means semaphore is shared between threads (not processes)
+    // Second parameter 0 denotes the sharing of semaphore between threads (not processes)
     if (sem_init(&active_bids_semaphore, 0, MAX_CONCURRENT_BIDS) != 0) {
         printf("[ERROR] Failed to initialize semaphore!\n");
         exit(1);
@@ -16,10 +16,10 @@ void initialize_semaphore(void) {
 
 void wait_for_bidding_slot(void) {
     // Wait (block) until a bidding slot is available
-    // This decrements the semaphore count
+    // this decrements the semaphore count
     sem_wait(&active_bids_semaphore);
     
-    // Optional: Print current available slots (for debugging)
+    // Optional: Printing currently available slots (for debugging)
     int current_value;
     sem_getvalue(&active_bids_semaphore, &current_value);
     printf("[SEMAPHORE] Bid started. %d slots remaining\n", current_value);
@@ -30,7 +30,7 @@ void release_bidding_slot(void) {
     // This increments the semaphore count
     sem_post(&active_bids_semaphore);
     
-    // Optional: Print current available slots (for debugging)
+    // Optional: Printing currently available slots (for debugging)
     int current_value;
     sem_getvalue(&active_bids_semaphore, &current_value);
     printf("[SEMAPHORE] Bid finished. %d slots available\n", current_value);
